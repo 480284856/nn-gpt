@@ -186,6 +186,9 @@ def extract_hyperparam(txt):
             # Clean up common JSON issues
             cleaned = re.sub(r',\s*}', '}', extracted)  # Remove trailing commas
             cleaned = re.sub(r',\s*]', ']', cleaned)
+
+            # if the property name is enclosed in quotes in stead of double quotes, convert it to double quotes
+            cleaned = re.sub(r"'([^']*)'", r'"\1"', cleaned)
             
             # Try to parse to validate
             json.loads(cleaned)
