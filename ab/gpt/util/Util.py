@@ -128,6 +128,10 @@ def extract_code(txt):
         ('', '')
     ]
     
+    # filter-syntax: filter(func, iterable)
+    # map-syntax: map(func, iterable)
+    # filter-function: remove any values that are not satisfied by the function
+    # map-function: apply the function to each value in the iterable
     extracted = next(filter(None, map(lambda l: extract_str(txt, l[0], l[1]), patterns)), '')
     
     if extracted:
@@ -187,6 +191,9 @@ def extract_hyperparam(txt):
             cleaned = re.sub(r',\s*}', '}', extracted)  # Remove trailing commas
             cleaned = re.sub(r',\s*]', ']', cleaned)
             
+            # if the property name is enclosed in quotes in stead of double quotes, convert it to double quotes
+            cleaned = re.sub(r"'([^']*)'", r'"\1"', cleaned)
+
             # Try to parse to validate
             json.loads(cleaned)
             print(f"[EXTRACT] ✓ Found HP (valid JSON): {len(cleaned)} chars")
