@@ -66,13 +66,13 @@ class ChatBot:
             self.__messages.append({"role": "user", "content": prompt})
             in_text = self.__messages
         else:
-            in_next = [{"role": "user", "content": prompt}]
+            in_text = [{"role": "user", "content": prompt}]
         
         # Use pipeline if available (PyTorch path)
         if self.__pipeline is not None:
             try:
                 out = self.__pipeline(
-                    in_next,
+                    in_text,
                     max_new_tokens=max_new_tokens,
                     do_sample=True,  # Allow Random answer
                     max_len=max_len,
@@ -94,7 +94,7 @@ class ChatBot:
                 print("[INFO] Falling back to direct generation")
         
         # Direct generation (ONNX or PyTorch fallback)
-        return self._direct_generate(in_next, max_new_tokens, max_len)
+        return self._direct_generate(in_text, max_new_tokens, max_len)
 
     def _direct_generate(self, messages, max_new_tokens, max_len):
         """Direct model.generate() call without pipeline - works for ONNX and PyTorch"""

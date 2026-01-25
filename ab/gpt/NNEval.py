@@ -81,7 +81,12 @@ def main(nn_name_prefix=NN_NAME_PREFIX, nn_train_epochs=NN_TRAIN_EPOCHS, only_ep
                     print(f"Code file {new_nn_file} not found in {model_dir_path}. Skipping.")
                     continue
 
-                print(f"\n--- Evaluating Model: {model_dir_path.relative_to(base_nngpt_path)} ---")
+                # Use relative path if under base_nngpt_path, otherwise use model_id
+                try:
+                    display_path = model_dir_path.relative_to(base_nngpt_path)
+                except ValueError:
+                    display_path = model_dir_path.name  # Just use the model folder name
+                print(f"\n--- Evaluating Model: {display_path} ---")
 
                 if not verify_nn_code(model_dir_path, code_file_path):
                     print(f"Code verification failed for {code_file_path}. Skipping evaluation.")

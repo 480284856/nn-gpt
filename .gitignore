@@ -27,3 +27,4 @@ stat/
 db/
 path/
 test/
+out_for_debug/

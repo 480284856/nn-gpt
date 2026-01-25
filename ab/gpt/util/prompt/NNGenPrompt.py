@@ -32,20 +32,24 @@ class NNGenPrompt(Prompt):
             pandas.Dataframe object with columns described in nn_api.data()
         """
         prompt_lists = []
-
+        # load the prompt file
         with open(self.prompts_path) as prompt_file: # /workspace/nn-gpt/ab/gpt/conf/prompt/train/NN_gen.json
             prompt_dict = json.load(prompt_file)
             assert isinstance(prompt_dict, dict)
-
+        # loop through the prompt keys, usually there is only one key: improvement_classification_codeonly
         for key in prompt_dict.keys():
             dataframe = DataFrame(columns=['instruction', 'context', 'response', 'category', 'text'])
             prompt_lists.append(dataframe)
-            prompt = '\n'.join(prompt_dict[key]['prompt'])
+            prompt = '\n'.join(prompt_dict[key]['prompt']) # NN_gen.json['improvement_classification_codeonly']['prompt']
             print('Preparing Data...', flush=True)
-            key_dict = prompt_dict[key]
+            key_dict = prompt_dict[key] # NN_gen.json['improvement_classification_codeonly']
             num_joint_nns = key_dict.get('num_joint_nns') or 1
-            data = lemur.data(only_best_accuracy=only_best_accuracy, task=key_dict.get('task'),
-                              nn_prefixes=tuple(key_dict.get('nn_prefixes')), max_rows=n_training_prompts,
+            data = lemur.data(only_best_accuracy=only_best_accuracy, # If True, for each unique combination of 
+                                                                     # (task, dataset, metric, nn, epoch) only the row with the highest accuracy is returned.
+                                                                     # If False, all matching rows are returned.
+                              task=key_dict.get('task'), # classification
+                              nn_prefixes=tuple(key_dict.get('nn_prefixes')), 
+                              max_rows=n_training_prompts,
                               sql=None if num_joint_nns < 2 else JoinConf(num_joint_nns=num_joint_nns,
                                                                           same_columns=tuple(key_dict.get('keep_same')),
                                                                           diff_columns=tuple(key_dict.get('no_repeat')),

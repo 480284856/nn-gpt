@@ -5,9 +5,9 @@
   "use_deepspeed": false,
   "token_from_file": false,
   "only_best_accuracy": false,
-  "context_length": 4600,
+  "context_length": 8192,
   "max_input_length": 1600,
-  "max_new_tokens": 3000,
+  "max_new_tokens": 8192,
   "use_unsloth": true,
   "load_in_4bit": true
 }
